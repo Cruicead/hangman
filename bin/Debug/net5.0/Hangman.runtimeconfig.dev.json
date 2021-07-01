@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\Cruicead\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\Cruicead\\.nuget\\packages"
+    ]
+  }
+}
