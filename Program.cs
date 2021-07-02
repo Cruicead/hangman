@@ -9,10 +9,10 @@ namespace Hangman
     {
         public static void Main()
         {
-            string path = @"countries_and_capitals.txt";
 
+            bool restart = true;
             var countries =
-            from line in File.ReadAllLines(path)
+            from line in File.ReadAllLines(@"countries_and_capitals.txt")
             let columns = line.Split('|')
             select new
             {
@@ -20,62 +20,78 @@ namespace Hangman
                 capital = columns[1].Trim()
             };
 
-            Random rnd = new Random();
-
-            var result = countries.ElementAt(rnd.Next() %countries.Count());
-
-            string regex = "\\S";
-            string puzzle = Regex.Replace(result.capital, regex, "_");
-            string letters = "";
-            string letter = "";
-            int lives = 6;
-            bool victory = false;
-
-            Console.WriteLine("Welcome to Hangman: World Capitals! You have six lives. Guessing a letter wrongly costs one life, but guessing the word wrongly costs two, so choose wisely!");
-
-            while (true)
+            while (restart)
             {
-                Console.WriteLine($"{puzzle}   lives: {lives}   guessed letters: {letters}");
-                if (lives < 3)
+                Random rnd = new Random();
+
+                var result = countries.ElementAt(rnd.Next() %countries.Count());
+
+                string regex = "\\S";
+                string puzzle = Regex.Replace(result.capital, regex, "_");
+                string letters = "";
+                string letter = "";
+                int lives = 6;
+                bool victory = false;
+                restart = false;
+
+                Console.WriteLine("Welcome to Hangman: World Capitals! You have six lives. Guessing a letter wrongly costs one life, but guessing the word wrongly costs two, so choose wisely!");
+
+                while (true)
                 {
-                    Console.WriteLine($"Hint: The capital of {result.country}.");
-                }
-                Console.WriteLine("Write \"lt\" if you want to guess a letter, or \"wd\" if you want to guess the word.");
-                switch (Console.ReadLine())
-                {
-                    case "lt":
-                        Console.WriteLine("Please enter a letter.");
+                    Console.WriteLine($"{puzzle}   lives: {lives}   guessed letters: {letters}");
+                    if (lives < 3)
+                    {
+                        Console.WriteLine($"Hint: The capital of {result.country}.");
+                    }
+                    Console.WriteLine("Write \"lt\" if you want to guess a letter, or \"wd\" if you want to guess the word.");
+                    switch (Console.ReadLine())
+                    {
+                        case "lt":
+                            Console.WriteLine("Please enter a letter.");
+                            letter = Console.ReadLine();
+                            letters += letter;
+                            regex = "[^\\s" + letters + letters.ToUpper() + "]";
+                            if (!result.capital.Contains(letter) && !result.capital.Contains(letter.ToUpper()))
+                            {
+                                lives--;
+                            }
+                            break;
+                        case "wd":
+                            Console.WriteLine("Please enter your guess.");
+                            letter = Console.ReadLine();
+                            if (letter.Contains(result.capital) || letter.Contains(result.capital.ToLower()))
+                            {
+                                victory = true;
+                            }
+                            else
+                            {
+                                lives-=2;
+                            }
+                            break;
+                    }
+                    puzzle = Regex.Replace(result.capital, regex, "_");
+                    if (lives < 1)
+                    {
+                        Console.WriteLine($"Game over! The answer was {result.capital}, the capital of {result.country}.");
+                        Console.WriteLine("Do you want to restart the game? Write \"yes\" or \"no\".");
                         letter = Console.ReadLine();
-                        letters += letter;
-                        regex = "[^\\s" + letters + letters.ToUpper() + "]";
-                        if (!result.capital.Contains(letter) && !result.capital.Contains(letter.ToUpper()))
+                        if (letter.Contains("yes"))
                         {
-                            lives--;
+                            restart = true;
                         }
                         break;
-                    case "wd":
-                        Console.WriteLine("Please enter your guess.");
+                    }
+                    if (victory || puzzle.Equals(result.capital))
+                    {
+                        Console.WriteLine($"Correct, it's {result.capital}, the capital of {result.country}. Congratulations, you won!");
+                        Console.WriteLine("Do you want to restart the game? Write \"yes\" or \"no\".");
                         letter = Console.ReadLine();
-                        if (!result.capital.Contains(letter))
+                        if (letter.Contains("yes"))
                         {
-                            lives-=2;
-                        }
-                        else
-                        {
-                            victory = true;
+                            restart = true;
                         }
                         break;
-                }
-                puzzle = Regex.Replace(result.capital, regex, "_");
-                if (lives < 1)
-                {
-                    Console.WriteLine("Game over!");
-                    break;
-                }
-                if (victory || puzzle.Equals(result.capital))
-                {
-                    Console.WriteLine($"Correct, it's {result.capital}, the capital of {result.country}. Congratulations, you won!");
-                    break;
+                    }
                 }
             }
         }
