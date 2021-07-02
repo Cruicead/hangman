@@ -33,6 +33,7 @@ namespace Hangman
                 string letters = "";
                 string letter = "";
                 int lives = 6;
+                int counter = 0;
                 bool victory = false;
                 restart = false;
 
@@ -41,6 +42,7 @@ namespace Hangman
 
                 while (true)
                 {
+                    counter++;
                     Console.WriteLine($"The word has {result.capital.Count()} letters (including spaces).\n{puzzle}   lives: {lives}   guessed letters: {letters}");
                     if (lives < 3)
                     {
@@ -90,7 +92,7 @@ namespace Hangman
                         timer.Stop();
                         double timespan = timer.Elapsed.TotalSeconds;
                         string time = string.Format("{0:0}",timespan);
-                        Console.WriteLine($"Correct, it's {result.capital}, the capital of {result.country}. Congratulations, you won! It took you {time} seconds.");
+                        Console.WriteLine($"Correct, it's {result.capital}, the capital of {result.country}. Congratulations, you won! It took you {time} seconds and {counter} guesses.");
                         Console.WriteLine("Do you want to restart the game? Write \"yes\" or \"no\".");
                         letter = Console.ReadLine();
                         if (letter.Contains("yes"))
