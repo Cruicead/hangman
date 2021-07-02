@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -28,16 +28,23 @@ namespace Hangman
             string puzzle = Regex.Replace(result.capital, regex, "_");
             string letters = "";
             string letter = "";
-            int lives = 5;
+            int lives = 6;
             bool victory = false;
+
+            Console.WriteLine("Welcome to Hangman: World Capitals! You have six lives. Guessing a letter wrongly costs one life, but guessing the word wrongly costs two, so choose wisely!");
 
             while (true)
             {
-                Console.WriteLine(puzzle + "   lives: " + lives + "   guessed letters: " + letters);
+                Console.WriteLine($"{puzzle}   lives: {lives}   guessed letters: {letters}");
+                if (lives < 3)
+                {
+                    Console.WriteLine($"Hint: The capital of {result.country}.");
+                }
                 Console.WriteLine("Write \"lt\" if you want to guess a letter, or \"wd\" if you want to guess the word.");
                 switch (Console.ReadLine())
                 {
                     case "lt":
+                        Console.WriteLine("Please enter a letter.");
                         letter = Console.ReadLine();
                         letters += letter;
                         regex = "[^\\s" + letters + letters.ToUpper() + "]";
@@ -47,6 +54,7 @@ namespace Hangman
                         }
                         break;
                     case "wd":
+                        Console.WriteLine("Please enter your guess.");
                         letter = Console.ReadLine();
                         if (!result.capital.Contains(letter))
                         {
@@ -66,7 +74,7 @@ namespace Hangman
                 }
                 if (victory || puzzle.Equals(result.capital))
                 {
-                    Console.WriteLine("Correct, it's " + result.capital + ". Congratulations, you won!");
+                    Console.WriteLine($"Correct, it's {result.capital}, the capital of {result.country}. Congratulations, you won!");
                     break;
                 }
             }
