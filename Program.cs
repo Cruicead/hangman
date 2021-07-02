@@ -79,6 +79,9 @@ namespace Hangman
                     {
                         timer.Stop();
                         Console.WriteLine($"Game over! The answer was {result.capital}, the capital of {result.country}.");
+                        var highscores = File.ReadLines(@"highscores.txt").TakeLast(10);
+                        Console.WriteLine("Last ten high scores:");
+                        highscores.ToList().ForEach(a => Console.WriteLine($"{0}", a));
                         Console.WriteLine("Do you want to restart the game? Write \"yes\" or \"no\".");
                         letter = Console.ReadLine();
                         if (letter.Contains("yes"))
@@ -92,7 +95,14 @@ namespace Hangman
                         timer.Stop();
                         double timespan = timer.Elapsed.TotalSeconds;
                         string time = string.Format("{0:0}",timespan);
-                        Console.WriteLine($"Correct, it's {result.capital}, the capital of {result.country}. Congratulations, you won! It took you {time} seconds and {counter} guesses.");
+                        Console.WriteLine($"Correct, it's {result.capital}, the capital of {result.country}. Congratulations, you won! It took you {time} seconds and {counter} guesses.\nPlease enter your name for the high scores.");
+                        string name = Console.ReadLine();
+                        DateTime date = DateTime.Now;
+                        string highscore = $"{name} | {date.ToString("MM.dd.yyyy HH:mm")} | {time} seconds | {counter} guesses | {result.capital}" + Environment.NewLine;
+                        File.AppendAllText(@"highscores.txt", highscore);
+                        var highscores = File.ReadLines(@"highscores.txt").TakeLast(10);
+                        Console.WriteLine("Last ten high scores:");
+                        highscores.ToList().ForEach(a => Console.WriteLine("{0}", a));
                         Console.WriteLine("Do you want to restart the game? Write \"yes\" or \"no\".");
                         letter = Console.ReadLine();
                         if (letter.Contains("yes"))
