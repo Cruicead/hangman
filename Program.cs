@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -22,6 +23,17 @@ namespace Hangman
                 capital = columns[1].Trim()
             };
 
+            List<string> ascii = new List<string>()
+            {
+                "    _____\n    |   |\n    O   |\n   /|\\  |\n   / \\  |\n        |\n      __|",
+                "    _____\n    |   |\n    O   |\n   /|\\  |\n   /    |\n        |\n      __|",
+                "    _____\n    |   |\n    O   |\n   /|\\  |\n        |\n        |\n      __|",
+                "    _____\n    |   |\n    O   |\n   /|   |\n        |\n        |\n      __|",
+                "    _____\n    |   |\n    O   |\n    |   |\n        |\n        |\n      __|",
+                "    _____\n    |   |\n    O   |\n        |\n        |\n        |\n      __|",
+                "    _____\n    |   |\n        |\n        |\n        |\n        |\n      __|"
+            };
+
             while (restart)
             {
                 Random rnd = new Random();
@@ -43,7 +55,7 @@ namespace Hangman
                 while (true)
                 {
                     counter++;
-                    Console.WriteLine($"The word has {result.capital.Count(char.IsLetter)} letters.\n{puzzle}   lives: {lives}   guessed letters: {letters}");
+                    Console.WriteLine($"{ascii[lives]}\nThe word has {result.capital.Count(char.IsLetter)} letters.\n{puzzle}   guessed letters: {letters}");
                     if (lives < 3)
                     {
                         Console.WriteLine($"Hint: The capital of {result.country}.");
@@ -78,10 +90,10 @@ namespace Hangman
                     if (lives < 1)
                     {
                         timer.Stop();
-                        Console.WriteLine($"Game over! The answer was {result.capital}, the capital of {result.country}.");
+                        Console.WriteLine($"{ascii[0]}\nGame over! The answer was {result.capital}, the capital of {result.country}.");
                         var highscores = File.ReadLines(@"highscores.txt").TakeLast(10);
                         Console.WriteLine("Last ten high scores:");
-                        highscores.ToList().ForEach(a => Console.WriteLine($"{0}", a));
+                        highscores.ToList().ForEach(a => Console.WriteLine("{0}", a));
                         Console.WriteLine("Do you want to restart the game? Write \"yes\" or \"no\".");
                         letter = Console.ReadLine();
                         if (letter.Contains("yes"))
