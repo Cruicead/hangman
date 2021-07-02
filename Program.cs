@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -11,6 +12,7 @@ namespace Hangman
         {
 
             bool restart = true;
+
             var countries =
             from line in File.ReadAllLines(@"countries_and_capitals.txt")
             let columns = line.Split('|')
@@ -35,6 +37,7 @@ namespace Hangman
                 restart = false;
 
                 Console.WriteLine("Welcome to Hangman: World Capitals! You have six lives. Guessing a letter wrongly costs one life, but guessing the word wrongly costs two, so choose wisely!");
+                Stopwatch timer = Stopwatch.StartNew();
 
                 while (true)
                 {
@@ -72,6 +75,7 @@ namespace Hangman
                     puzzle = Regex.Replace(result.capital, regex, "_");
                     if (lives < 1)
                     {
+                        timer.Stop();
                         Console.WriteLine($"Game over! The answer was {result.capital}, the capital of {result.country}.");
                         Console.WriteLine("Do you want to restart the game? Write \"yes\" or \"no\".");
                         letter = Console.ReadLine();
@@ -83,7 +87,10 @@ namespace Hangman
                     }
                     if (victory || puzzle.Equals(result.capital))
                     {
-                        Console.WriteLine($"Correct, it's {result.capital}, the capital of {result.country}. Congratulations, you won!");
+                        timer.Stop();
+                        double timespan = timer.Elapsed.TotalSeconds;
+                        string time = string.Format("{0:0}",timespan);
+                        Console.WriteLine($"Correct, it's {result.capital}, the capital of {result.country}. Congratulations, you won! It took you {time} seconds.");
                         Console.WriteLine("Do you want to restart the game? Write \"yes\" or \"no\".");
                         letter = Console.ReadLine();
                         if (letter.Contains("yes"))
