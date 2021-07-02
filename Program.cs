@@ -41,7 +41,7 @@ namespace Hangman
 
                 while (true)
                 {
-                    Console.WriteLine($"{puzzle}   lives: {lives}   guessed letters: {letters}");
+                    Console.WriteLine($"The word has {result.capital.Count()} letters.\n{puzzle}   lives: {lives}   guessed letters: {letters}");
                     if (lives < 3)
                     {
                         Console.WriteLine($"Hint: The capital of {result.country}.");
